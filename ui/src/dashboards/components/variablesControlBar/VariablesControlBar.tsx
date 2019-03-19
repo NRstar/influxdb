@@ -2,6 +2,8 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import _ from 'lodash'
+import {DragDropContext} from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 
 // Components
 import VariableDropdown from 'src/dashboards/components/variablesControlBar/VariableDropdown'
@@ -22,6 +24,7 @@ import {Variable} from '@influxdata/influx'
 
 // Decorators
 import {ErrorHandling} from 'src/shared/decorators/errors'
+import DraggableDropdown from './DraggableDropdown'
 
 interface OwnProps {
   dashboardID: string
@@ -57,19 +60,37 @@ class VariablesControlBar extends PureComponent<Props> {
 
     return (
       <div className="variables-control-bar">
-        {variables.map(v => {
+        {variables.map((v, i) => {
           return (
-            <VariableDropdown
+            <DraggableDropdown
               key={v.id}
               name={v.name}
-              variableID={v.id}
+              id={v.id}
+              index={i}
               dashboardID={dashboardID}
               onSelect={this.handleSelectValue}
+              moveDropdown={this.handleMoveDropdown}
             />
+            // <VariableDropdown
+            //   key={v.id}
+            //   name={v.name}
+            //   variableID={v.id}
+            //   dashboardID={dashboardID}
+            //   onSelect={this.handleSelectValue}
+            // />
+            // moveDropdown: (dragIndex: number, hoverIndex: number) => void
           )
         })}
       </div>
     )
+  }
+
+  private handleMoveDropdown = (
+    dragIndex: number,
+    hoverIndex: number
+  ): void => {
+    console.log(dragIndex)
+    console.log(hoverIndex)
   }
 
   private handleSelectValue = (variableID: string, value: string) => {
@@ -86,7 +107,9 @@ const mstp = (state: AppState, props: OwnProps): StateProps => {
   return {variables: getVariablesForDashboard(state, props.dashboardID)}
 }
 
-export default connect<StateProps, DispatchProps, OwnProps>(
-  mstp,
-  mdtp
-)(VariablesControlBar)
+export default DragDropContext(HTML5Backend)(
+  connect<StateProps, DispatchProps, OwnProps>(
+    mstp,
+    mdtp
+  )(VariablesControlBar)
+)
