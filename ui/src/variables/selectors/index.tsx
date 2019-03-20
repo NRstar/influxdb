@@ -4,6 +4,7 @@ import {get} from 'lodash'
 
 // Utils
 import {getVarAssignment} from 'src/variables/utils/getVarAssignment'
+import {getDeep} from 'src/utils/wrappers'
 
 // Types
 import {RemoteDataState} from 'src/types'
@@ -42,7 +43,7 @@ export const getVariablesForDashboard = (
 
   let variablesForDash = []
 
-  const variablesIDs = Object.keys(get(values, `${dashboardID}.values`))
+  const variablesIDs = getDeep<string[]>(values, `${dashboardID}.order`, [])
 
   variablesIDs.forEach(variableID => {
     const variable = get(variables, `${variableID}.variable`)

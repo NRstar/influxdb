@@ -1,12 +1,12 @@
 // Libraries
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
-import _ from 'lodash'
+import {isEmpty, sortBy} from 'lodash'
 import {DragDropContext} from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 
 // Components
-import VariableDropdown from 'src/dashboards/components/variablesControlBar/VariableDropdown'
+// import VariableDropdown from 'src/dashboards/components/variablesControlBar/VariableDropdown'
 import {EmptyState, ComponentSize} from 'src/clockface'
 
 // Utils
@@ -16,7 +16,7 @@ import {getVariablesForDashboard} from 'src/variables/selectors'
 import 'src/dashboards/components/variablesControlBar/VariablesControlBar.scss'
 
 // Actions
-import {selectValue} from 'src/variables/actions'
+import {selectValue, moveVariable} from 'src/variables/actions'
 
 // Types
 import {AppState} from 'src/types/v2'
@@ -36,6 +36,7 @@ interface StateProps {
 
 interface DispatchProps {
   selectValue: typeof selectValue
+  moveVariable: typeof moveVariable
 }
 
 type Props = StateProps & DispatchProps & OwnProps
@@ -45,7 +46,7 @@ class VariablesControlBar extends PureComponent<Props> {
   render() {
     const {dashboardID, variables} = this.props
 
-    if (_.isEmpty(variables)) {
+    if (isEmpty(variables)) {
       return (
         <div className="variables-control-bar">
           <EmptyState
@@ -60,7 +61,7 @@ class VariablesControlBar extends PureComponent<Props> {
 
     return (
       <div className="variables-control-bar">
-        {variables.map((v, i) => {
+        {sortBy(variables, 'name').map((v, i) => {
           return (
             <DraggableDropdown
               key={v.id}
@@ -86,11 +87,13 @@ class VariablesControlBar extends PureComponent<Props> {
   }
 
   private handleMoveDropdown = (
-    dragIndex: number,
-    hoverIndex: number
+    originalIndex: number,
+    newIndex: number
   ): void => {
-    console.log(dragIndex)
-    console.log(hoverIndex)
+    console.log('drag index: ', originalIndex)
+    console.log('hover index: ', newIndex)
+    const {dashboardID, moveVariable} = this.props
+    moveVariable(originalIndex, newIndex, dashboardID)
   }
 
   private handleSelectValue = (variableID: string, value: string) => {
@@ -101,6 +104,7 @@ class VariablesControlBar extends PureComponent<Props> {
 
 const mdtp = {
   selectValue: selectValue,
+  moveVariable,
 }
 
 const mstp = (state: AppState, props: OwnProps): StateProps => {

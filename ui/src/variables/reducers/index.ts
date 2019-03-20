@@ -28,6 +28,7 @@ export interface VariablesState {
     // the Data Explorer
     [contextID: string]: {
       status: RemoteDataState
+      order: string[] // IDs of variables
       values: VariableValuesByID
     }
   }
@@ -83,11 +84,20 @@ export const variablesReducer = (
         const {contextID, status, values} = action.payload
 
         if (values) {
-          draftState.values[contextID] = {status, values}
+          let order = Object.keys(values)
+          if (draftState.values[contextID].order.length) {
+            order = draftState.values[contextID].order
+          }
+
+          draftState.values[contextID] = {
+            status,
+            values,
+            order,
+          }
         } else if (draftState.values[contextID]) {
           draftState.values[contextID].status = status
         } else {
-          draftState.values[contextID] = {status, values: null}
+          draftState.values[contextID] = {status, values: null, order: []}
         }
 
         return
@@ -108,6 +118,29 @@ export const variablesReducer = (
         draftState.values[contextID].values[
           variableID
         ].selectedValue = selectedValue
+
+        return
+      }
+
+      case 'MOVE_VARIABLE': {
+        const {originalIndex, newIndex, contextID} = action.payload
+
+        const variableIDToMove = get(
+          draftState,
+          `values.${contextID}.order[${originalIndex}]`
+        )
+        console.log(variableIDToMove)
+        const variableIDToSwap = get(
+          draftState,
+          `values.${contextID}.order[${newIndex}]`
+        )
+        console.log(variableIDToSwap)
+
+        console.log('before: ', draftState.values[contextID].order)
+        draftState.values[contextID].order[originalIndex] = variableIDToSwap
+        draftState.values[contextID].order[newIndex] = variableIDToMove
+
+        console.log('after: ', draftState.values[contextID].order)
 
         return
       }
