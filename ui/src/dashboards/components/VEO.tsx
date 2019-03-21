@@ -64,9 +64,19 @@ class VEO extends PureComponent<Props, {}> {
     const {existingView} = this.props
     const view = existingView || createView<XYView>(ViewType.XY)
 
-    this.props.setActiveTimeMachine(VEO_TIME_MACHINE_ID, {view})
+    // this.props.setActiveTimeMachine(VEO_TIME_MACHINE_ID, {view})
 
-    this.props.executeQueries()
+    // this.props.executeQueries()
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    const {existingView} = this.props
+
+    if (!prevProps.existingView && this.props.existingView) {
+      this.props.setActiveTimeMachine(VEO_TIME_MACHINE_ID, {view: existingView})
+      this.props.executeQueries()
+      console.log('yo')
+    }
   }
 
   public render() {

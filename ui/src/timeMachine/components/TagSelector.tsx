@@ -184,6 +184,7 @@ class TagSelector extends PureComponent<Props> {
         </div>
       )
     }
+    console.log(selectedKey, selectedValues)
 
     return (
       <SelectorList
@@ -271,6 +272,7 @@ const mstp = (state: AppState, ownProps: OwnProps): StateProps => {
 
   const tags = getActiveQuery(state).builderConfig.tags
   const {key: selectedKey, values: selectedValues} = tags[ownProps.index]
+  console.log(selectedKey, selectedValues)
 
   let emptyText: string
 
