@@ -1,3 +1,4 @@
+// Libraries
 import * as React from 'react'
 import {findDOMNode} from 'react-dom'
 import {
@@ -11,8 +12,12 @@ import {
   DragSourceMonitor,
 } from 'react-dnd'
 import {XYCoord} from 'dnd-core'
+import classnames from 'classnames'
+
+// Components
 import VariableDropdown from './VariableDropdown'
 
+// Constants
 const dropdownType = 'dropdown'
 
 const dropdownSource = {
@@ -106,14 +111,28 @@ class Dropdown extends React.Component<
       isDragging,
       connectDragSource,
       connectDropTarget,
+      index,
     } = this.props
-    // const opacity = isDragging ? 0 : 1
+
+    const className = classnames('variable-dropdown', {
+      'variable-dropdown__dragging': isDragging,
+    })
 
     return connectDragSource(
       connectDropTarget(
-        <div>
+        <div className={className}>
+          {/* TODO: Add variable description to title attribute when it is ready */}
+          <div className="variable-dropdown--label">
+            <div className="customizable-field--drag">
+              <span className="hamburger" />
+            </div>
+            <span>
+              {name}
+              {index}
+            </span>
+          </div>
+          <div className="variable-dropdown--placeholder" />
           <VariableDropdown
-            name={name}
             variableID={id}
             dashboardID={dashboardID}
             onSelect={onSelect}

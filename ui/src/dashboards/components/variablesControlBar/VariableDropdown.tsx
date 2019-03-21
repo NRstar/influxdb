@@ -24,7 +24,6 @@ interface StateProps {
 }
 
 interface OwnProps {
-  name: string
   variableID: string
   dashboardID: string
   onSelect: (variableID: string, value: string) => void
@@ -34,27 +33,18 @@ type Props = StateProps & OwnProps
 
 class VariableDropdown extends PureComponent<Props> {
   render() {
-    const {name, selectedValue} = this.props
+    const {selectedValue} = this.props
 
     return (
-      <div className="variable-dropdown">
-        {/* TODO: Add variable description to title attribute when it is ready */}
-        <div className="variable-dropdown--label">
-          <div className="customizable-field--drag">
-            <span className="hamburger" />
-          </div>
-          <span>{name}</span>
-        </div>
-        <Dropdown
-          selectedID={selectedValue}
-          onChange={this.handleSelect}
-          widthPixels={140}
-          customClass="variable-dropdown--dropdown"
-          menuColor={DropdownMenuColors.Amethyst}
-        >
-          {this.dropdownItems}
-        </Dropdown>
-      </div>
+      <Dropdown
+        selectedID={selectedValue}
+        onChange={this.handleSelect}
+        widthPixels={140}
+        customClass="variable-dropdown--dropdown"
+        menuColor={DropdownMenuColors.Amethyst}
+      >
+        {this.dropdownItems}
+      </Dropdown>
     )
   }
 

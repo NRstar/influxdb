@@ -4,6 +4,8 @@
   display: flex;
   flex-direction: row;
   height: $form-sm-height;
+  position: relative;
+  border-radius: $radius;
 }
 
 .variable-dropdown--dropdown {
@@ -31,5 +33,23 @@
     @include gradient-h($c-comet, $c-laser);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+}
+
+.variable-dropdown--placeholder {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: $radius;
+  @include gradient-h($c-comet, $c-pool);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.25s ease;
+
+  .variable-dropdown__dragging & {
+    opacity: 1;
   }
 }
