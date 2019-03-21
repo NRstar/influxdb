@@ -1,7 +1,7 @@
 // Libraries
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
-import {isEmpty, sortBy} from 'lodash'
+import {isEmpty} from 'lodash'
 import {DragDropContext} from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 
@@ -61,7 +61,7 @@ class VariablesControlBar extends PureComponent<Props> {
 
     return (
       <div className="variables-control-bar">
-        {sortBy(variables, 'name').map((v, i) => {
+        {variables.map((v, i) => {
           return (
             <DraggableDropdown
               key={v.id}
